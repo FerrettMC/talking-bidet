@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Bidet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+170bc6a05b4fb43404a5b38449f289e7895323c3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Bidet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Bidet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
