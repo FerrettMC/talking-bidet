@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.3.0" />
+    <PackageReference Include="NetCoreAudio" Version="2.0.1" />
     <PackageReference Include="PortAudioSharp" Version="0.3.0" />
     <PackageReference Include="Vosk" Version="0.3.38" />
   </ItemGroup>

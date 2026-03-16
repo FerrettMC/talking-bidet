@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Vosk;
 using System.Text.Json;
+using NetCoreAudio;
 
 class ProcessAudio
 {
@@ -129,10 +130,13 @@ class ProcessAudio
       {
         KeyValues.Initialized = true;
         KeyValues.TimeLeft = KeyValues.TimeToSpeak;
-        var rand = new Random();
-        string randomGreeting = KeyValues.Greetings[rand.Next(KeyValues.Greetings.Length)];
-        await Speaking.Speak(randomGreeting);
-        Console.WriteLine($"Toilet: {randomGreeting}");
+        // var rand = new Random();
+        // string randomGreeting = KeyValues.Greetings[rand.Next(KeyValues.Greetings.Length)];
+        // await Speaking.Speak(randomGreeting);
+        // Console.WriteLine($"Toilet: {randomGreeting}");
+
+        var player = new Player();
+        await player.Play("ding.mp3");
       }
       return;
     }
