@@ -7,6 +7,8 @@ public static class Speaking
 
   public static async Task Speak(string text)
   {
+    ProcessAudio.latencyTimer.Stop();
+    Console.WriteLine($"⏱️ Response time: {ProcessAudio.latencyTimer.ElapsedMilliseconds} ms");
     KeyValues.isSpeaking = true;
     // Generate speech
     var psi = new ProcessStartInfo
@@ -51,5 +53,6 @@ public static class Speaking
     // Now it's safe to listen again
     KeyValues.isSpeaking = false;
     ProcessAudio.InitAudio();
+
   }
 }

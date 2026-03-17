@@ -12,6 +12,9 @@ class ProcessAudio
   private static readonly byte[] buffer = new byte[4096];
   private static bool initialized = false;
 
+  public static readonly Stopwatch latencyTimer = new();
+
+
   public static void InitAudio()
   {
     if (initialized) return;
@@ -56,6 +59,7 @@ class ProcessAudio
 
           if (!string.IsNullOrWhiteSpace(text))
           {
+            latencyTimer.Restart();
             CheckAudio(text);
             continue;
           }
@@ -82,43 +86,10 @@ class ProcessAudio
         KeyValues.Initialized = false;
         return;
       }
-      if (!KeyValues.BidetOn)
+      bool Bidet = await BidetChecks(text);
+      if (Bidet)
       {
-        // Bidet on
-        for (int i = 0; i < KeyValues.Bidet.Length; i++)
-        {
-          for (int x = 0; x < KeyValues.On.Length; x++)
-          {
-            string testingText = $"{KeyValues.Bidet[i]} {KeyValues.On[x]}";
-            if (testingText == text)
-            {
-              await Speaking.Speak("Activating bidet");
-              Console.WriteLine("Toilet: Activating bidet!");
-              KeyValues.Initialized = false;
-              KeyValues.BidetOn = true;
-              return;
-            }
-          }
-        }
-      }
-      if (KeyValues.BidetOn)
-      {
-        // Bidet off
-        for (int i = 0; i < KeyValues.Bidet.Length; i++)
-        {
-          for (int x = 0; x < KeyValues.Off.Length; x++)
-          {
-            string testingText = $"{KeyValues.Bidet[i]} {KeyValues.Off[x]}";
-            if (testingText == text)
-            {
-              await Speaking.Speak("Deactivating bidet");
-              Console.WriteLine("Toilet: Deactivating bidet!");
-              KeyValues.Initialized = false;
-              KeyValues.BidetOn = false;
-              return;
-            }
-          }
-        }
+        return;
       }
       Console.WriteLine("System: Unrecognized keyword.");
       KeyValues.TimeLeft = KeyValues.TimeToSpeak;
@@ -137,10 +108,85 @@ class ProcessAudio
 
         var player = new Player();
         await player.Play("ding.mp3");
+        return;
+      }
+      if (text.Contains("toilet"))
+      {
+        int spaceIndex = text.IndexOf(' ');
+        string firstWord = spaceIndex == -1 ? text : text[..spaceIndex];
+        if (firstWord != "toilet")
+        {
+          return;
+        }
+
+        string result = spaceIndex == -1
+            ? ""
+            : text[(spaceIndex + 1)..];
+
+        bool Bidet = await BidetChecks(result);
+        if (Bidet)
+        {
+          return;
+        }
+        for (int i = 0; i < KeyValues.Flush.Length; i++)
+        {
+          string testingText = $"{KeyValues.Flush[i]}";
+          if (testingText == result)
+          {
+            await Speaking.Speak("Flushing toilet");
+            Console.WriteLine("Toilet: Flushing toilet!");
+            KeyValues.Initialized = false;
+            return;
+          }
+        }
+
       }
       return;
     }
 
+  }
+
+  public static async Task<bool> BidetChecks(string text)
+  {
+    if (!KeyValues.BidetOn)
+    {
+      // Bidet on
+      for (int i = 0; i < KeyValues.Bidet.Length; i++)
+      {
+        for (int x = 0; x < KeyValues.On.Length; x++)
+        {
+          string testingText = $"{KeyValues.Bidet[i]} {KeyValues.On[x]}";
+          if (testingText == text)
+          {
+            await Speaking.Speak("Activating bidet");
+            Console.WriteLine("Toilet: Activating bidet!");
+            KeyValues.Initialized = false;
+            KeyValues.BidetOn = true;
+            return true;
+          }
+        }
+      }
+    }
+    if (KeyValues.BidetOn)
+    {
+      // Bidet off
+      for (int i = 0; i < KeyValues.Bidet.Length; i++)
+      {
+        for (int x = 0; x < KeyValues.Off.Length; x++)
+        {
+          string testingText = $"{KeyValues.Bidet[i]} {KeyValues.Off[x]}";
+          if (testingText == text)
+          {
+            await Speaking.Speak("Deactivating bidet");
+            Console.WriteLine("Toilet: Deactivating bidet!");
+            KeyValues.Initialized = false;
+            KeyValues.BidetOn = false;
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
   public static void StopAudio()
   {

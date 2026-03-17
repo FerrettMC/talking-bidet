@@ -2,7 +2,7 @@ public static class KeyValues
 {
   public static string InitializationWord = "toilet";
   public static string[] Flush = ["flush", "flash", "flesh", "slush", "floss", "fresh", "lush"];
-  public static string[] Bidet = ["bidet", "the day", "payday", "bit it", "be day", "peter", "but at", "per day", "bid it", "but day", "today", "but a"];
+  public static string[] Bidet = ["bidet", "the day", "payday", "bit it", "be day", "peter", "but at", "per day", "bid it", "but day", "today", "but a", "midday"];
   public static string[] On = ["on", "and"];
   public static string[] Off = ["off", "of"];
 
